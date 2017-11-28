@@ -1,0 +1,154 @@
+html {
+    font-size: 50px/*no*/
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+$black: #505050;
+$gray: #989898;
+$blue: #53d3ff;
+body {
+    font-size: 24px/*no*/;
+    color: $black;
+}
+fieldset, img {
+    border: 0
+}
+
+*, a:focus, input:focus {
+    outline: 0
+}
+
+li, ol, ul {
+    list-style: none;
+}
+
+a{
+    color: $black;
+    text-decoration: none;
+}
+.tc{
+    text-align: center;
+}
+
+@media screen and (min-width: 320px/*no*/) {
+    html {
+        font-size:21.33px/*no*/
+    }
+
+    body {
+        font-size: 12px/*no*/
+    }
+}
+
+@media screen and (min-width: 360px/*no*/) {
+    html {
+        font-size:24px/*no*/
+    }
+
+    body {
+        font-size: 12px/*no*/
+    }
+}
+
+@media screen and (min-width: 375px/*no*/) {
+    html {
+        font-size:25px/*no*/
+    }
+
+    body {
+        font-size: 12px/*no*/
+    }
+}
+
+@media screen and (min-width: 384px/*no*/) {
+    html {
+        font-size:25.6px/*no*/
+    }
+
+    body {
+        font-size: 14px/*no*/
+    }
+}
+
+@media screen and (min-width: 400px/*no*/) {
+    html {
+        font-size:26.67px/*no*/
+    }
+
+    body {
+        font-size: 14px/*no*/
+    }
+}
+
+@media screen and (min-width: 414px/*no*/) {
+    html {
+        font-size:27.6px/*no*/
+    }
+
+    body {
+        font-size: 14px/*no*/
+    }
+}
+
+@media screen and (min-width: 424px/*no*/) {
+    html {
+        font-size:28.27px/*no*/
+    }
+
+    body {
+        font-size: 14px/*no*/
+    }
+}
+
+@media screen and (min-width: 480px/*no*/) {
+    html {
+        font-size:32px/*no*/
+    }
+
+    body {
+        font-size: 15.36px/*no*/
+    }
+}
+
+@media screen and (min-width: 540px/*no*/) {
+    html {
+        font-size:36px/*no*/
+    }
+
+    body {
+        font-size: 17.28px/*no*/
+    }
+}
+
+@media screen and (min-width: 720px/*no*/) {
+    html {
+        font-size:48px/*no*/
+    }
+
+    body {
+        font-size: 23.04px/*no*/
+    }
+}
+
+@media screen and (min-width: 750px/*no*/) {
+    html {
+        font-size:50px/*no*/
+    }
+
+    body {
+        font-size: 24px/*no*/
+    }
+}
+
+@media screen and (min-width: 1080px/*no*/) {
+    html {
+        font-size:72px/*no*/;
+    }
+
+    body {
+        font-size: 34.56px/*no*/;
+    }
+}
