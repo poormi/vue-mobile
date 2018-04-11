@@ -1,9 +1,11 @@
 <template>
 	<div class="date-wrap">
 		<span class="now-date font-30" >{{ nowDate|formatDate('day')}}</span>
-		<span class="comp-date font-30" >{{ compDate|formatDate('day')}}</span>
-		<button class="icon-button icon-date" @touchend="showDatePicker=true"></button>
-		<DatePicker v-show="showDatePicker" :dates="dates" />
+		<span class="comp-date font-30" @click="showDatePicker=true">{{ compDate|formatDate('day')}}</span>
+		<a href="javascript:;" class="opt-link icon-date" @touchend="showDatePicker=true"></a>
+		<div class="mask" v-if="showMask" @click="showDatePicker = false">
+			<DatePicker v-if="showDatePicker" :dates="dates" />
+		</div>
 	</div>
 </template>
  
@@ -14,6 +16,7 @@ import moment from 'moment'
 		data(){
 			return {
 				showDatePicker: false,
+				showMask: false
 			}
 		},
 		props: {
@@ -59,6 +62,15 @@ import moment from 'moment'
 		components: {
 			DatePicker
 		},
+		watch: {
+			showDatePicker(val){
+				if(val){
+					this.showMask = true
+				}else{
+					setTimeout(() => { this.showMask=false }, 300)
+				}
+			}
+		},
 		mounted(){
 			window.datePicker = {
 				cancel: () => {
@@ -78,7 +90,6 @@ import moment from 'moment'
 		padding: 25px 36px;
 		border-radius: 3px;/*no*/
 		color: #fff;
-		box-shadow: 0 0.5px 1px 0px rgba(1,60,150,0.5);/*no*/
 	}
 	.now-date:after{
 		content: 'VS';
@@ -87,6 +98,10 @@ import moment from 'moment'
 	}
 	.comp-date{
 		margin-left: 20px;
+		padding-left: 35px;
+		background: url('../../assets/images/icon-date-on.png') left center no-repeat;
+		background-size: 25px 25px;
+		color: #55d4ff;
 	}
 	.icon-date{
 		position: absolute;
