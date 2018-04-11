@@ -1,44 +1,50 @@
 <template>
-	<div class="datepicker" @touchstart="closeWrap" @touchmove.prevent>
-		<div style="text-align: center;">
-			<div class="date-tabs radius" :class="{'r': type == (dates.length&&dates[dates.length-1].type)}">
-			<span class="date-item" v-for="d in dates" :class="{'on': d.type == type, 'disabled': d.disabled}" @touchstart="!d.disabled?type = d.type: 0">{{d.title}}: {{d.date|formatDate('YYYY年MM月DD日')}}</span>
+	<transition name="bounceDown">
+		<div class="datepicker" @click.stop @touchstart="closeWrap" @touchmove.prevent>
+			<div class="tc">
+				<div class="date-tabs radius" :class="{'r': type == (dates.length&&dates[dates.length-1].type)}">
+				<span class="date-item" v-for="d in dates" :class="{'on': d.type == type, 'disabled': d.disabled}" @touchstart="!d.disabled?type = d.type: 0">{{d.title}}: {{d.date|formatDate('YYYY年MM月DD日')}}</span>
+				</div>
 			</div>
+			<div class="date-block" @touchstart.stop="closeWrap" @touchstart="showYearWrap=true;showMonthWrap=false"><span class="l">{{getYear}}</span> 年</div>
+			<div ref="monthPicker" class="date-block" @touchstart.stop="closeWrap" @touchstart="showMonthWrap=true;showYearWrap=false"><span class="l">{{month||getMonth}}</span> 月</div>
+			<div class="day-wrap tc ovh">
+				<ul class="title">
+					<li v-for="day in days">
+						{{day}}
+					</li>
+				</ul>
+				<ul class="dates-wrap shadow">
+					<li v-for="empty in firstDay" class="date-item">&nbsp;
+					</li>
+					<li class="date-item" v-for="date in getDaysInMonth" :class="{'on': date==getDate, 'disabled': isValid(date)}" @touchstart="chooseDate(date)">{{date}}</li>
+					<li v-for="empty in (42 - firstDay - getDaysInMonth)" class="date-item">&nbsp;
+					</li>
+				</ul>
+				<a href="javascript:;" class="button-normal gray fl" @click="$parent.showDatePicker=false">取消</a>
+				<button class="button-normal fr" @click="close">确定</button>
+			</div>
+			<transition name="right">
+			<div v-if="showMonthWrap" class="right-wrap">
+				<ul>
+					<li class="right-item" :class="{'on': m==(month||getMonth), 'disabled': validMonth(m)}" v-for="m in months" @touchstart.stop @click="chooseMonth(m)">
+						<h1 class="inline">{{m}}</h1> 月
+					</li>
+				</ul>
+			</div>
+		</transition>
+		<transition name="right">
+			<div v-if="showYearWrap" class="right-wrap">
+				<ul>
+					<li v-if="y>=2016" class="right-item" :class="{'on': y==(year||getYear)}" v-for="y in years" @touchstart="chooseYear(y)">
+						<h1 class="inline">{{y}}</h1> 年
+					</li>
+				</ul>
+			</div>
+		</transition>
+			<Tips v-if="showTips" :msg="msg" />
 		</div>
-		<div class="date-block" @touchstart.stop="closeWrap" @touchstart="showYearWrap=true"><span class="l">{{getYear}}</span> 年</div>
-		<div ref="monthPicker" class="date-block" @touchstart.stop="closeWrap" @click="showMonthWrap=true"><span class="l">{{month||getMonth}}</span> 月</div>
-		<div class="day-wrap tc">
-			<ul class="title">
-				<li v-for="day in days">
-					{{day}}
-				</li>
-			</ul>
-			<ul class="dates-wrap shadow">
-				<li v-for="empty in firstDay" class="date-item">&nbsp;
-				</li>
-				<li class="date-item" v-for="date in getDaysInMonth" :class="{'on': date==getDate, 'disabled': isValid(date)}" @touchstart="chooseDate(date)">{{date}}</li>
-				<li v-for="empty in (42 - firstDay - getDaysInMonth)" class="date-item">&nbsp;
-				</li>
-			</ul>
-			<a href="javascript:;" class="button-normal gray" @click="$parent.showDatePicker=false">取消</a>
-			<button class="button-normal" @click="close">确定</button>
-		</div>
-		<div class="right-wrap" :class="{'show': showMonthWrap}">
-			<ul>
-				<li class="right-item" :class="{'on': m==(month||getMonth), 'disabled': validMonth(m)}" v-for="m in months" @touchstart.stop @click="chooseMonth(m)">
-					<h1 class="inline">{{m}}</h1> 月
-				</li>
-			</ul>
-		</div>
-		<div class="right-wrap" :class="{'show': showYearWrap}">
-			<ul>
-				<li v-if="y>=2016" class="right-item" :class="{'on': y==(year||getYear)}" v-for="y in years" @touchstart="chooseYear(y)">
-					<h1 class="inline">{{y}}</h1> 年
-				</li>
-			</ul>
-		</div>
-		<Tips v-if="showTips" :msg="msg" />
-	</div>
+	</transition>
 </template>
 
 <script>
@@ -190,12 +196,7 @@ $month-len: 12;
 $blue: #53d3ff;
 $gray: #ededed;
 .datepicker{
-	position: fixed;
-	top: 0;
-	left: 0;
-	padding: 0 20px;
-	width: 100%;
-	height: 100%;
+	padding: 0 20px 20px;
 	background-color: #fff;
 	color: #505050;
 	font-size: 30px;
@@ -210,6 +211,7 @@ $gray: #ededed;
 		text-align: center;
 		border: solid 1px $gray;
 		border-left-color: transparent;
+		z-index: 0;
 		.date-item{
 			display: inline-block;
 			width: 50%;
@@ -294,6 +296,12 @@ $gray: #ededed;
 	}
 	.button-normal{
 		margin-top: 36px;
+		&.fl{
+			margin-left: 16px;
+		}
+		&.fr{
+			margin-right: 16px;
+		}
 	}
 	.title{
 		margin-bottom: 5px;
@@ -306,12 +314,12 @@ $gray: #ededed;
 	.right-wrap{
 		position: absolute;
 		top: 0;
-		right: -375px;
+		right: 0;
 		width: 375px;
 		height: 100%;
 		background-color: #fff;
 		box-shadow: -1px 0 15px 5px rgba(0,0,0,.2);/*no*/
-		transition: all 500ms ease;
+		//transition: all 500ms ease;
 		.right-item{
 			padding-left: 72px;
 			height: 100% / $month-len;
@@ -331,6 +339,50 @@ $gray: #ededed;
 		&.show{
 			right: 0;
 		}
+	}
+}
+
+.bounceDown-enter-active {
+    animation: bounce-in-down  .5s linear;
+}
+
+.bounceDown-leave-active {
+    animation: bounce-in-down .5s linear reverse;
+}
+
+.right-enter-active{
+	animation: right .5s linear reverse;
+}
+.right-leave-active{
+	animation: right .5s linear;
+}
+
+@keyframes bounce-in-down {
+    0%{
+    	opacity: 0;
+    	transform: translateY(-1000px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-500px);
+    }
+    99%{
+    	transform: translateY(0px);
+    }
+    to {
+        transform: none
+    }
+}
+
+@keyframes right {
+	0%{
+		right: 0;
+	}
+	50%{
+		right: -375px/2;
+	}
+	100%{
+		right: -375px;
 	}
 }
 </style>
