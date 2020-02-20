@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const vendors - [
+const vendors = [
   'vue',
   'vue-router',
   'vuex',
